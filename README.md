@@ -25,10 +25,10 @@ shareme -d myfile.txt
 ```
 shareme list
 ```
-* Start a local web app to manage shared files
+* Start shareme webapp for geting shared files
 
 ```
-shareme startapp
+shareme startup
 ```
 * Config it
 ```
@@ -37,4 +37,4 @@ shareme config
 There will be several pretty prompts to lead your input.
 
 ## LICENSE
-### MIT ###
+***MIT***
