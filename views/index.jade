@@ -1,0 +1,12 @@
+html
+
+	head
+
+	body
+		.main
+			ul.files
+				each file, id in files
+					li 
+						a(href="#", file-id="#{id}") #{file.name}
+						a(href="/files/#{id}/download") download
+						a(href="/files/#{id}/preview") preview

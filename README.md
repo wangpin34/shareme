@@ -1,7 +1,7 @@
 # shareme
 It is a file server that you can share your file very easy. And it's build by Nodejs.
 
-To be complete original version in couple of days.
+It's still in developing.
 
 ## Install
 
@@ -12,14 +12,14 @@ npm install -g shareme
 ```
 ## Usage
 
-* Share a file
+* Add file to sharing list
 ```
-shareme myfile.txt
+shareme add myfile.txt
 ```
 
-* Don's share a file
+* Remove file from sharing list
 ```
-shareme -d myfile.txt
+shareme delete myfile.txt
 ```
 * List shared files
 ```

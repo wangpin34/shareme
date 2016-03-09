@@ -1,0 +1,34 @@
+{
+  "name": "shareme",
+  "author": "wangpin",
+  "version": "0.0.0",
+  "description": "share easily",
+  "main": "cmd.js",
+  "scripts": {
+    "test": "test command",
+    "start": "node cmd.js",
+    "dev": "nodemon --harmony server.js"
+  },
+  "keywords": [
+    "share",
+    "file"
+  ],
+  "preferGlobal": true,
+  "bin": {
+    "shareme": "./cmd.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "content-type-mime": "^1.0.1",
+    "crypto": "0.0.3",
+    "jade": "^1.11.0",
+    "koa": "^1.1.2",
+    "koa-jade": "^2.1.0",
+    "koa-route": "^3.0.0",
+    "koa-router": "^5.4.0",
+    "koa-views": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.1"
+  }
+}
