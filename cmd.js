@@ -55,7 +55,7 @@ function dispatch(action,option){
 		case DELETE: return store.delete(option.file)
 		case LIST: return store.list()
 		case START: 
-			let child = exec('node --harmony ' + path.join(basedir, 'server.js'), function(err, stdout, stderr){
+			let child = exec('node --harmony "' + path.join(basedir, 'server.js') + '"', function(err, stdout, stderr){
 				if(err) log(err)
 				log(stdout)
     			log(stderr)
