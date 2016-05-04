@@ -1,0 +1,32 @@
+html,body {
+	width:100%;
+	height:100%;
+	margin:0;
+	padding:0;
+}
+
+.main {
+	width:50%;
+	margin: 5% auto;
+	padding: 50px;
+	background: #CDFDCA;
+	border-radius: 10px;
+	min-height : 60%;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+}
+
+ul li {
+	list-style: none;
+	height: 30px;
+	line-height: 30px;
+}
+
+ul li a,span {
+	display: inline-block;
+	width: 100px;
+	text-decoration: none;
+}

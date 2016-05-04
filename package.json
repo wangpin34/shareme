@@ -1,11 +1,12 @@
 {
   "name": "shareme",
   "author": "wangpin",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "share easily",
   "main": "cmd.js",
   "scripts": {
-    "test": "test command"
+    "test": "test command",
+    "startup": "nodemon --harmony server.js"
   },
   "keywords": [
     "share",
@@ -20,14 +21,9 @@
     "content-type-mime": "^1.0.1",
     "crypto": "0.0.3",
     "jade": "^1.11.0",
-    "koa": "^1.1.2",
-    "koa-jade": "^2.1.0",
-    "koa-route": "^3.0.0",
-    "koa-router": "^5.4.0",
-    "koa-views": "^4.0.1",
     "yargs": "^4.6.0"
   },
   "devDependencies": {
-    "nodemon": "^1.9.1"
+    "nodemon": "^1.9.2"
   }
 }

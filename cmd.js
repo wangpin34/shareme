@@ -37,8 +37,12 @@ const argv = require('yargs')
 		console.log('All shared files \n\n' + files.join('\n'))
 	})
 	.command(START, START, function(args){
-		console.log('Start sharing files')
-		dispatch(START)
+		console.log('Start sharing')
+		let argv = args.reset()
+					.alias('p','port')
+					.argv
+		let port = argv.p
+		dispatch(START, {port: port})
 	})
 	.usage('Usage: shareme [options]')
 	.example('shareme add photo.jpg', 'Add photo.jpg into shared list')
@@ -55,7 +59,7 @@ function dispatch(action,option){
 		case DELETE: return store.delete(option.file)
 		case LIST: return store.list()
 		case START: 
-			let child = exec('node --harmony "' + path.join(basedir, 'server.js') + '"', function(err, stdout, stderr){
+			let child = exec('node --harmony "' + path.join(basedir, 'server.js') + '" ' + (option.port||'') , function(err, stdout, stderr){
 				if(err) log(err)
 				log(stdout)
     			log(stderr)
@@ -66,5 +70,6 @@ function dispatch(action,option){
 }
 
 function log(str){
-	fs.writeFileSync(logFile, str)
+	fs.appendFileSync(logFile, new Date())
+	fs.appendFileSync(logFile, str)
 }

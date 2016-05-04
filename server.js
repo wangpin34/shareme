@@ -1,35 +1,41 @@
 'use strict'
-const app = require('koa')();
-const router = require('koa-router')();
+
 const fs = require('fs');
 const contentType = require('content-type-mime');
 const path = require('path')
+const jade = require('jade')
+const http = require('http')
 
 const basedir = path.dirname(process.argv[1])
 const dataFile = path.join(basedir, './data/data.json')
+const viewPath = path.join(basedir, 'views')
+const assetPath = path.join(basedir, 'assets')
 
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
+const PREFIX = ':'
+const DELIMITER = '/'
+const PORT = process.argv.splice(2)[0] || 4000
 
 
-const Jade = require('koa-jade')
-const jade = new Jade({
-  viewPath: path.join(basedir, 'views'),
-  debug: false,
-  pretty: false,
-  compileDebug: false,
-  //locals: global_locals_for_all_pages,
-  //basedir: 'path/for/jade/extends',
-/*  helperPath: [
-    'path/to/jade/helpers',
-    { random: 'path/to/lib/random.js' },
-    { _: require('lodash') }
-  ],*/
-  app: app // equals to jade.use(app) and app.use(jade.middleware)
-})
+function genParams(url, pattern){
+  let paramIndexes = []
+  let params = {}
+  
+  pattern.split(DELIMITER).forEach(function(p, index){
+    if(p.indexOf(PREFIX) === 0){
+      paramIndexes.push({index: index, name: p.replace(PREFIX,'')})
+    }
+  })
 
-jade.locals.someKey = 'some value';
+  url = url.split(DELIMITER)
+  paramIndexes.forEach(function(p){
+    if( (typeof url[p.index]) !== undefined){
+      params[p.name] = url[p.index]
+    }
+  })
+
+  return params
+}
+
 
 function getFilesWithPathInfo(){
   return JSON.parse( fs.readFileSync(dataFile,{encoding:'utf-8'}) ).files
@@ -46,48 +52,55 @@ function getFiles(){
 }
 
 
-router
-  .get('/', function *(next) {
-  	var files = getFiles()
-  	this.render('index', { files:files }, true)
-  })
+let tss = http.createServer((req, res) => {
 
-  .get('/files/:id/download', function *(next){
-      yield next;
-      var req = this.request;
-      var res = this.response;
+  if(req.url.lastIndexOf('.') != -1){
+    let filePath = path.join(assetPath, req.url)
+    if(fs.existsSync(filePath)){
+      fs.createReadStream(filePath).pipe(res)
+      return
+    }else{
+      res.statusCode = 404
+      res.end('not found')
+      return
+    }
+  }
 
-      var id = this.params.id;
-      var file = getFilesWithPathInfo()[id];
 
-      res.type = contentType(file.name)
-      res.attachment(file.name);
-      res.body = fs.createReadStream(file.path,{
-                      flags: 'r',
-                      encoding: null,
-                      fd: null,
-                      mode: 0o666,
-                      autoClose: true
-                    });
-  })
-  .get('/files/:id/preview', function *(next){
-      yield next;
-      let req = this.request
-      let res = this.response
+  let params = genParams(req.url, '/files/:id/:action')
+  if(params.id){
+    let id = params.id
+    let action = params.action
+    let file = getFilesWithPathInfo()[id]
 
-      let id = this.params.id
-      let file = getFilesWithPathInfo()[id]
+    res.setHeader('Content-Type', contentType(file.name))
 
-      res.type = contentType(file.name);
-      res.body = fs.createReadStream(file.path,{
+    if(action === 'download'){
+      res.setHeader('Content-Disposition', 'attachment;filename=' + file.name)
+    }
+
+    try{
+          fs.existsSync(file.path) ? fs.createReadStream(file.path,{
                       flags: 'r',
                       encoding: null,
                       fd: null,
                       mode: 0o666,
                       autoClose: true
                     })
-  });
+          .pipe(res) : res.end('file not found')
+    }catch(err){
+      console.error(err)
+      res.end('Unexpected error happend when shareme fetch file data you want, please try later') 
+    }
+
+  }else{
+    let files = getFiles()
+    res.setHeader('Content-Type','text/html')
+    res.end(jade.renderFile( path.join(viewPath, 'index.jade'), {cache: false, files: files} ), 'utf-8')
+  }
+
+})
 
 
-console.log('shareme started on port %s', 3000);
-app.listen(3000);
+tss.listen(PORT)
+console.log('Shareme startup on port ' + PORT)

@@ -1,12 +1,13 @@
 html
 
 	head
-
+		link(rel="stylesheet",href="/css/site.css")
 	body
 		.main
 			ul.files
 				each file, id in files
 					li 
-						a(href="#", file-id="#{file.id}") #{file.name}
+						span #{file.name}
 						a(href="/files/#{file.id}/download") download
 						a(href="/files/#{file.id}/preview") preview
+						
