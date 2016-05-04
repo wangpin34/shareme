@@ -1,26 +1,23 @@
 /*
  * Data storage, provide file info save,remove interface
  */
+ 'use strict'
 
 var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
 var md5sum = crypto.createHash('md5');
 
-var dataFile = './data/data.json';
-var data;
-var dataTemplate =  {
+let dataFile = path.join(path.dirname(process.argv[1]),'/data/data.json')
+let data;
+let dataTemplate =  {
 
 		//Store file info 
 		// hash : { name : 'xxx', path : 'xxx'} 
 		files : {
 
 		},
-		//Store index
-		// path : hash
-		index : {
 
-		}
 };
 
 
@@ -54,11 +51,19 @@ var main = {
 
 	},
 	delete : function(filepath){
-		var hashId = funcs.encodeFilepath( path.join(process.cwd(),filepath) );
-		if(fs.existsSync(filepath) && data.files[hashId]){
-			delete data.files[hashId];
-			funcs.updateData(dataFile,data);	
+		let absolutePath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(),filepath)
+		let hashId = funcs.encodeFilepath( absolutePath )
+		if(data.files[hashId]){
+			delete data.files[hashId]
+			funcs.updateData(dataFile,data)
 		}
+	},
+	list: function(){
+		let files = []
+		for(let x in data.files){
+			files.push(data.files[x])
+		}
+		return files
 	}
 
 }

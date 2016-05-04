@@ -7,6 +7,6 @@ html
 			ul.files
 				each file, id in files
 					li 
-						a(href="#", file-id="#{id}") #{file.name}
-						a(href="/files/#{id}/download") download
-						a(href="/files/#{id}/preview") preview
+						a(href="#", file-id="#{file.id}") #{file.name}
+						a(href="/files/#{file.id}/download") download
+						a(href="/files/#{file.id}/preview") preview

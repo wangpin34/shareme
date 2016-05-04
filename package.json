@@ -5,9 +5,7 @@
   "description": "share easily",
   "main": "cmd.js",
   "scripts": {
-    "test": "test command",
-    "start": "node cmd.js",
-    "dev": "nodemon --harmony server.js"
+    "test": "test command"
   },
   "keywords": [
     "share",
@@ -26,7 +24,8 @@
     "koa-jade": "^2.1.0",
     "koa-route": "^3.0.0",
     "koa-router": "^5.4.0",
-    "koa-views": "^4.0.1"
+    "koa-views": "^4.0.1",
+    "yargs": "^4.6.0"
   },
   "devDependencies": {
     "nodemon": "^1.9.1"

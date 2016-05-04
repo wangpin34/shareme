@@ -1,7 +1,12 @@
-var app = require('koa')();
+'use strict'
+const app = require('koa')();
 const router = require('koa-router')();
-var fs = require('fs');
-var contentType = require('content-type-mime');
+const fs = require('fs');
+const contentType = require('content-type-mime');
+const path = require('path')
+
+const basedir = path.dirname(process.argv[1])
+const dataFile = path.join(basedir, './data/data.json')
 
 app
   .use(router.routes())
@@ -10,7 +15,7 @@ app
 
 const Jade = require('koa-jade')
 const jade = new Jade({
-  viewPath: './views',
+  viewPath: path.join(basedir, 'views'),
   debug: false,
   pretty: false,
   compileDebug: false,
@@ -26,62 +31,25 @@ const jade = new Jade({
 
 jade.locals.someKey = 'some value';
 
-
-var files,
-    fullFiles;
-
-
-function clone(obj){
-  var copy = {};
-  for(var x in obj){
-    if(typeof obj[x] === 'object'){
-      copy[x] = clone(obj[x]);
-    }else{
-      copy[x] = obj[x];
-    }
-  }
-  return copy;
+function getFilesWithPathInfo(){
+  return JSON.parse( fs.readFileSync(dataFile,{encoding:'utf-8'}) ).files
 }
 
-function searchFile(id){
-
-  if(!files){
-    files = require('./data/data.json').files;
-    fullFiles = clone(files);
+function getFiles(){
+  let filesPathes = getFilesWithPathInfo()
+  let files = []
+  for( let x in filesPathes){
+    let file = filesPathes[x]
+    files.push({id: x, name: file.name})
   }
-  for(var x in files){
-    var o = {};
-    o.name = files[x].name;
-    files[x] = o;
-  }
-
-  if(!id){
-    return files;
-  }else{
-    return fullFiles[id];
-  }
+  return files
 }
 
 
 router
   .get('/', function *(next) {
-  	var files = searchFile();
-    console.log(JSON.stringify(files));
+  	var files = getFiles()
   	this.render('index', { files:files }, true)
-    //this.body = data;
-  })
-  .get('files/:id',function *(next){
-    yield next;
-
-  })
-  .post('/files', function *(next) {
-    // ...
-  })
-  .put('/files/:id', function *(next) {
-    // ...
-  })
-  .del('/files/:id', function *(next) {
-    // ...
   })
 
   .get('/files/:id/download', function *(next){
@@ -90,7 +58,7 @@ router
       var res = this.response;
 
       var id = this.params.id;
-      var file = searchFile(id);
+      var file = getFilesWithPathInfo()[id];
 
       res.type = contentType(file.name)
       res.attachment(file.name);
@@ -104,11 +72,11 @@ router
   })
   .get('/files/:id/preview', function *(next){
       yield next;
-      var req = this.request;
-      var res = this.response;
+      let req = this.request
+      let res = this.response
 
-      var id = this.params.id;
-      var file = searchFile(id);
+      let id = this.params.id
+      let file = getFilesWithPathInfo()[id]
 
       res.type = contentType(file.name);
       res.body = fs.createReadStream(file.path,{
@@ -117,7 +85,7 @@ router
                       fd: null,
                       mode: 0o666,
                       autoClose: true
-                    });
+                    })
   });
 
 

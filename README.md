@@ -28,12 +28,9 @@ shareme list
 * Start shareme webapp for geting shared files
 
 ```
-shareme startup
+shareme start
 ```
-* Config it
-```
-shareme config
-```
+
 There will be several pretty prompts to lead your input.
 
 ## LICENSE

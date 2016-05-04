@@ -1,48 +1,70 @@
-var child_process = require('child_process');
-var store = require('./store');
+#! /usr/bin/env node
+'use strict'
 
-//Commands
+const exec = require('child_process').exec
+const store = require('./store')
+const path = require('path')
+const fs = require('fs')
 
-//1. Help 
-var helpMsg = '' +
-	'add    [file path]  Add file to share list' + '\n' + 
- 	'delete [file path]  Delete file from share list ' + '\n' +  
- 	'startup             Start sharing' + '\n' +  
-'';
+const basedir = path.dirname(process.argv[1])
+const logFile = path.join(basedir, 'server.log')
 
-var errMsgs = {
-	unReg:function(arg){
-		return arg + ' could not be discerned';
-	}
-};
+const ADD = 'add'
+const DELETE = 'delete'
+const LIST = 'list'
+const START = 'start'
 
-function dispatcher(){
-	var cmd = arguments.length&&arguments[0],filepath,msg;
-	if(arguments.length === 1){
-		cmd = arguments[0];
-		if(cmd === 'help'){
-			msg = helpMsg;
-		}else if(cmd === 'start'){
-			require('./server.js');
-			msg = 'start sharing';
-		}else{
-			msg = errMsgs.unReg(cmd);
-		}
-	}else if(arguments.length === 2){
-		cmd = arguments[0];
-		filepath = arguments[1];
-		msg = 'two args';
-		switch(cmd){
-			case 'add' : store.add(filepath); msg = filepath + ' has been added to share list'; break ;
-			case 'delete' : store.delete(filepath); msg = filepath + ' has been deleted from share list'; break ;
-			default : break;
-		}
-	}else{
-		msg = errMsgs.unReg(cmd);
-	}
-	return msg;
-} 
 
-var args = process.argv.slice(2);
-var msg = dispatcher.apply(new Object,args);
-console.log(msg);
+const argv = require('yargs')
+	.command(ADD, '-A', function(args){
+		let argv = args.reset()
+			.argv
+		let file = argv._[1]
+		dispatch(ADD,{file:file})
+		console.log('Added '+ file + ' into shared-list successfully')
+	})
+	.command(DELETE, '-D', function(args){
+		let argv = args.reset()
+			.argv
+		let file = argv._[1]
+		dispatch(DELETE,{file:file})
+		console.log('Removed '+ file + ' from shared-list successfully')
+	})
+	.command(LIST, '-L', function(args){
+		let files = dispatch(LIST).map(function(f){
+			return f.name + ' *** ' + f.path
+		})
+		console.log('All shared files \n\n' + files.join('\n'))
+	})
+	.command(START, START, function(args){
+		console.log('Start sharing files')
+		dispatch(START)
+	})
+	.usage('Usage: shareme [options]')
+	.example('shareme add photo.jpg', 'Add photo.jpg into shared list')
+	.help('h')
+	.alias('h','help')
+	.epilog('copyright 2016')
+	.argv
+
+return
+
+function dispatch(action,option){
+	switch(action){
+		case ADD: return store.add(option.file)
+		case DELETE: return store.delete(option.file)
+		case LIST: return store.list()
+		case START: 
+			let child = exec('node --harmony ' + path.join(basedir, 'server.js'), function(err, stdout, stderr){
+				if(err) log(err)
+				log(stdout)
+    			log(stderr)
+			})
+			return
+		default : return
+	} 
+}
+
+function log(str){
+	fs.writeFileSync(logFile, str)
+}
