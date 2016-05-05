@@ -28,5 +28,7 @@ ul li {
 ul li a,span {
 	display: inline-block;
 	width: 100px;
+	padding-right: 30px;
+	overflow: hidden;
 	text-decoration: none;
 }
