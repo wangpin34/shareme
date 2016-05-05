@@ -2,7 +2,7 @@
   "name": "shareme",
   "author": "wangpin",
   "version": "1.1.0",
-  "description": "share easily",
+  "description": "share file easily",
   "main": "cmd.js",
   "scripts": {
     "test": "test command",
@@ -25,5 +25,12 @@
   },
   "devDependencies": {
     "nodemon": "^1.9.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:wangpin34/shareme.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wangpin34/shareme/issues"
   }
 }
