@@ -1,6 +1,8 @@
 # shareme
 It's a file-sharing tool that makes sharing easier.
 
+[![NPM](https://nodei.co/npm/shareme.png?stars&downloads)](https://nodei.co/npm/shareme/)
+
 ## Install
 
 It should be installed globally so that it can be used from anywhere.
