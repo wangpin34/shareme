@@ -7,7 +7,9 @@ html
 			ul.files
 				each file, id in files
 					li 
-						span #{file.name}
+						label #{file.name}
 						a(href="/files/#{file.id}/download") download
 						a(href="/files/#{file.id}/preview") preview
+
+	script(type="text/javascript", src="/js/label.js")
 						

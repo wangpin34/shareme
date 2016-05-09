@@ -25,10 +25,19 @@ ul li {
 	line-height: 30px;
 }
 
-ul li a,span {
+ul li a,label {
 	display: inline-block;
 	width: 100px;
 	padding-right: 30px;
+	margin-right: 30px;
 	overflow: hidden;
 	text-decoration: none;
+}
+
+div.prompt {
+	display: none;
+	position: fixed;
+	background: #ffffff;
+	border-radius: 5px;
+	padding: 5px;
 }
