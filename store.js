@@ -3,12 +3,13 @@
  */
  'use strict'
 
-var fs = require('fs');
-var path = require('path');
-var crypto = require('crypto');
-var md5sum = crypto.createHash('md5');
+const fs = require('fs')
+const path = require('path')
+const crypto = require('crypto')
+const md5sum = crypto.createHash('md5')
+const os = require('os')
 
-let dataFile = path.join(path.dirname(process.argv[1]),'/data/data.json')
+let dataFile = path.join(os.homedir(), 'shareme.data')
 let data;
 let dataTemplate =  {
 
@@ -16,12 +17,12 @@ let dataTemplate =  {
 		// hash : { name : 'xxx', path : 'xxx'} 
 		files : {
 
-		},
+		}
 
-};
+}
 
 
-data = fs.existsSync(dataFile) ? require(dataFile) : dataTemplate;	
+data = fs.existsSync(dataFile) ? JSON.parse( fs.readFileSync(dataFile,{encoding:'utf-8'}) ) : dataTemplate;	
 
 //Private functions
 var funcs = {

@@ -5,9 +5,10 @@ const contentType = require('content-type-mime');
 const path = require('path')
 const jade = require('jade')
 const http = require('http')
+const os = require('os')
 
 const basedir = path.dirname(process.argv[1])
-const dataFile = path.join(basedir, './data/data.json')
+const dataFile = path.join(os.homedir(), 'shareme.data')
 const viewPath = path.join(basedir, 'views')
 const assetPath = path.join(basedir, 'assets')
 
