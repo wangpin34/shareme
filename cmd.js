@@ -5,6 +5,7 @@ const exec = require('child_process').exec
 const store = require('./store')
 const path = require('path')
 const fs = require('fs')
+const os = require('os')
 
 const basedir = path.dirname(process.argv[1])
 const logFile = path.join(basedir, 'server.log')
@@ -41,7 +42,9 @@ const argv = require('yargs')
 		let argv = args.reset()
 					.alias('p','port')
 					.argv
-		let port = argv.p
+		let port = argv.p || 4000
+		let addr = getAddress(port)
+		console.log('Try: http://localhost:' + port + '\n     ' + addr)
 		dispatch(START, {port: port})
 	})
 	.usage('Usage: shareme [options]')
@@ -72,4 +75,20 @@ function dispatch(action,option){
 function log(str){
 	fs.appendFileSync(logFile, new Date())
 	fs.appendFileSync(logFile, str)
+}
+
+function getAddress(port){
+  let addr = ''
+  //Windows platform solution
+  if(os.type().toLowerCase().indexOf('win') !== -1){
+     let ifs = os.networkInterfaces()
+     let ip = (ifs['Local Area Connection'] || ifs['Wireless Network Connection']).filter(function(i){
+        return i.family=='IPv4'
+     })[0].address
+     addr = 'http://' + ip + ':' + port
+  }else{
+    
+  }
+
+  return addr
 }
