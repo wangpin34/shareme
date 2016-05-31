@@ -1,7 +1,7 @@
 {
   "name": "shareme",
   "author": "wangpin",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "help you sharing someting easily",
   "main": "cmd.js",
   "scripts": {

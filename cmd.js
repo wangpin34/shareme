@@ -79,15 +79,21 @@ function log(str){
 
 function getAddress(port){
   let addr = ''
-  //Windows platform solution
-  if(os.type().toLowerCase().indexOf('win') !== -1){
-     let ifs = os.networkInterfaces()
-     let ip = (ifs['Local Area Connection'] || ifs['Wireless Network Connection']).filter(function(i){
-        return i.family=='IPv4'
-     })[0].address
-     addr = 'http://' + ip + ':' + port
-  }else{
-    
+
+  try{
+  	  //Windows platform solution
+	  if(os.type().toLowerCase().indexOf('win') !== -1){
+	     let ifs = os.networkInterfaces()
+	     let ip = (ifs['Local Area Connection'] || ifs['Wireless Network Connection']).filter(function(i){
+	        return i.family=='IPv4'
+	     })[0].address
+	     addr = 'http://' + ip + ':' + port
+	  }else{
+	    
+	  }
+
+  }catch(err){
+  	addr = ''
   }
 
   return addr
